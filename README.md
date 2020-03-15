@@ -1,4 +1,5 @@
-## Datos cocinados para hacer mapas de 
+## Datos cocinados para hacer mapas y series temporales
+### covid-19
 
 * Autor: Ramiro Aznar
 * Ultima actualizacion: 2020-03-15
