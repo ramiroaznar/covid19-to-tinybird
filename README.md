@@ -12,7 +12,7 @@ Los datasets tienen el siguiente esquema:
 * longitude (int) [solo en los datasets de centroides]
 * value (int)
 * population (int)
-* value_density (int)
+* value_density (float)
 * ccaa (string)
 * source (string)
 * source_url (string)
