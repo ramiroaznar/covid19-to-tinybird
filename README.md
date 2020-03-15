@@ -22,7 +22,7 @@ La diferencia fundamental entre estos datasets y los de Datadista es como se han
 
 ### Metodologia
 
-Las queries utilizadas para hacer esta agregacion se pueden ver en [este (collaboratory) notebook](/prepare_covid19_data_spain.ipynb).
+Las queries utilizadas para hacer esta agregacion se pueden ver en [este notebook](/prepare_covid19_data_spain.ipynb) ([Google Colaboratory](https://colab.research.google.com/drive/1W4Uw0w4bgCE5Q1oHSnQuscHbDpGmA9wu)).
 
 ### Datasets
 
