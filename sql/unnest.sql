@@ -17,7 +17,6 @@ with data as (
     ) AS value,
     d.ccaa,
     s.population,
-    s.the_geom,
     'Datadista' as source,
     'https://github.com/datadista/datasets/tree/master/COVID%2019' as source_url 
   from 

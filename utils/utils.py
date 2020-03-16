@@ -1,9 +1,13 @@
 import pandas as pd
-import os
+import json
 from cartoframes.auth import set_default_credentials
 from cartoframes import to_carto, read_carto
 import warnings
 import logging
+import time
+from carto.auth import APIKeyAuthClient
+from carto.sql import BatchSQLClient
+from carto.exceptions import CartoException
 
 
 logging.basicConfig(
@@ -15,6 +19,14 @@ warnings.filterwarnings('ignore')
 
 
 set_default_credentials('creds.json')
+with open('creds.json', 'r') as f:
+    creds = json.load(f)
+    USERNAME = creds['username']
+    API_KEY = creds['api_key']
+    USR_BASE_URL = "https://{user}.carto.com/".format(user=USERNAME)
+
+auth_client = APIKeyAuthClient(api_key=API_KEY, base_url=USR_BASE_URL)
+SQL_CLIENT = BatchSQLClient(auth_client)
 DATASETS = ['casos', 'fallecidos']
 
 
@@ -65,7 +77,7 @@ def get_unnested_datasets():
     logger.info('Getting unnested datasets...')
 
     sql_file = read_sql_file('unnest')
-    
+
     unnested_casos, unnested_fallecidos = (
         read_carto(sql_file.format(dataset=i))
         for i in DATASETS
@@ -79,8 +91,34 @@ def get_centroids_datasets():
     logger.info('Getting centroids datasets...')
 
     centroids_casos, centroids_fallecidos = (
-        read_carto(read_sql_file('centroids').format(i))
+        read_carto(read_sql_file('centroids').format(dataset=i))
         for i in DATASETS
     )
 
     return centroids_casos, centroids_fallecidos
+
+
+def update_geoms():
+
+    update_queries = []
+
+    try:
+        [update_queries.append(
+            read_sql_file('update_geoms').format(dataset=i)
+            )
+            for i in DATASETS]
+    except CartoException as e:
+        logger.info("some error ocurred", e)
+
+    job = SQL_CLIENT.create(update_queries)
+
+    job_id = job['job_id']
+    status = 'pending'
+    while status != 'done':
+        job = SQL_CLIENT.read(job_id)
+        status = job['status']
+        queries = job['query']
+        logger.info(", ".join(map(lambda q: q['status'],queries)))
+        time.sleep(60)
+
+    return status

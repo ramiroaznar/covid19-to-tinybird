@@ -3,6 +3,7 @@
 from utils import utils as u
 import click
 
+
 @click.command()
 @click.help_option('-h', '--help')
 def main():
@@ -22,6 +23,7 @@ def main():
         "unnested_fallecidos": unnested_fallecidos
     }
     u.import_datasets_to_carto(unnested_data)
+    u.update_geoms()
 
     # centroids data
     centroids_casos, centroids_fallecidos = u.get_centroids_datasets()
@@ -30,6 +32,7 @@ def main():
         "centroids_fallecidos": centroids_fallecidos
     }
     u.import_datasets_to_carto(centroids_data)
+
 
 if __name__ == "__main__":
     main()
