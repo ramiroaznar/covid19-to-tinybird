@@ -22,13 +22,51 @@ La diferencia fundamental entre estos datasets y los de Datadista es como se han
 
 ### Metodologia
 
-Las queries utilizadas para hacer esta agregacion se pueden ver en [este notebook](/prepare_covid19_data_spain.ipynb) ([Google Colaboratory](https://colab.research.google.com/drive/1W4Uw0w4bgCE5Q1oHSnQuscHbDpGmA9wu)).
+Los datasets se actualizan diariamente corriendo el script `run.py`. 
+
+Si quieres correrlo en tu ordenador sigue los siguientes pasos:
+1. Clona este repositorio.
+2. Deberas [crearte una cuenta en CARTO](www.carto.com/signup).
+3. Crea un archivo en esta carpeta llamado `creds.json` con la siguiente estructura:
+
+```json
+{
+    "username": "TU_USERNAME",
+    "api_key": "TU_API_KEY"
+}
+```
+
+4. Crea un virtual environment:
+
+```bash
+$ virtualenv -p python 3 env
+```
+
+5. Activalo:
+
+```bash
+$ source env/bin/activate
+```
+
+6. Instala las dependencias:
+
+```bash
+$ pip install -r requirements.txt
+```
+
+7. Por ultimo, corre el script:
+
+```bash
+$ python run.py
+```
 
 ### Datasets
 
 * Casos:
-    * [Poligonos](https://ramiroaznar.carto.com/dataset/casos_df)
-    * [Centroides](https://ramiroaznar.carto.com/dataset/casos_centroids)
+    * [Raw](https://ramiroaznar.carto.com/dataset/casos)
+    * [Poligonos](https://ramiroaznar.carto.com/dataset/unnested_casos)
+    * [Centroides](https://ramiroaznar.carto.com/dataset/centroids_casos)
 * Fallecidos:
-    * [Poligonos](https://ramiroaznar.carto.com/dataset/fallecidos_df)
-    * [Centroides](https://ramiroaznar.carto.com/dataset/fallecidos_centroids)
+    * [Raw](https://ramiroaznar.carto.com/dataset/fallecidos)
+    * [Poligonos](https://ramiroaznar.carto.com/dataset/unnested_fallecidos)
+    * [Centroides](https://ramiroaznar.carto.com/dataset/centroids_fallecidos)
