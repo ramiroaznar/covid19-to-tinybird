@@ -78,9 +78,12 @@ def get_unnested_datasets():
 
     sql_file = read_sql_file('unnest')
 
-    unnested_casos, unnested_fallecidos = (
-        read_carto(sql_file.format(dataset=i))
-        for i in DATASETS
+    unnested_casos = read_carto(
+        read_sql_file('unnest_casos')
+    )
+
+    unnested_fallecidos = read_carto(
+        read_sql_file('unnest_fallecidos')
     )
 
     return unnested_casos, unnested_fallecidos

@@ -26,7 +26,7 @@ with data as (
     'Datadista' as source,
     'https://github.com/datadista/datasets/tree/master/COVID%2019' as source_url 
   from 
-    {dataset} d,
+    fallecidos d,
     spain_regions s
   where 
     d.ccaa = s.nom_ccaa
