@@ -19,7 +19,7 @@ Los datasets tienen el siguiente esquema:
 * source_url (string)
 * date (timestamp)
 
-La diferencia fundamental entre estos datasets y los de Datadista es como se han estructurado los datos en funcion del tiempo. Mientras que en los datos de Datadista cada columna es una fecha y cada columna es una comunidad, en estos datasets cada fila es el dato de una comunidad en una fecha. 
+La diferencia fundamental entre estos datasets y los de Datadista es como se han estructurado los datos en funcion del tiempo. Mientras que en los datos de Datadista cada columna es una fecha y cada fila es una comunidad (formato ancho), en estos datasets cada fila es el dato de una comunidad en una fecha (formato largo). 
 
 ### Metodologia
 
