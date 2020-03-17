@@ -76,8 +76,6 @@ def get_unnested_datasets():
 
     logger.info('Getting unnested datasets...')
 
-    sql_file = read_sql_file('unnest')
-
     unnested_casos = read_carto(
         read_sql_file('unnest_casos')
     )
