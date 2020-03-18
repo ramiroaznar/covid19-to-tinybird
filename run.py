@@ -2,6 +2,7 @@
 
 from utils import utils as u
 import click
+import time
 
 
 @click.command()
@@ -15,6 +16,7 @@ def main():
         "fallecidos": fallecidos
     }
     u.import_datasets_to_carto(raw_data)
+    time.sleep(60)
 
     # unnested data
     unnested_casos, unnested_fallecidos = u.get_unnested_datasets()
@@ -22,7 +24,9 @@ def main():
         "unnested_casos": unnested_casos,
         "unnested_fallecidos": unnested_fallecidos
     }
+    time.sleep(60)
     u.import_datasets_to_carto(unnested_data)
+    time.sleep(60)
     u.update_geoms()
 
     # centroids data
@@ -31,6 +35,7 @@ def main():
         "centroids_casos": centroids_casos,
         "centroids_fallecidos": centroids_fallecidos
     }
+    time.sleep(60)
     u.import_datasets_to_carto(centroids_data)
 
 
