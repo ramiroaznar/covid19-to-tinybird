@@ -2,7 +2,6 @@
 ### covid-19
 
 * Autor: Ramiro Aznar
-* Ultima actualizacion: 2020-03-15
 * Fuente de datos: Datadista
 
 ### Esquemas
