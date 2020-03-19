@@ -27,7 +27,7 @@ with open('creds.json', 'r') as f:
 
 auth_client = APIKeyAuthClient(api_key=API_KEY, base_url=USR_BASE_URL)
 SQL_CLIENT = BatchSQLClient(auth_client)
-DATASETS = ['casos', 'fallecidos']
+DATASETS = ['casos', 'fallecidos', 'uci', 'altas']
 
 
 def get_datasets():
@@ -36,14 +36,14 @@ def get_datasets():
 
     URL = "https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_{}.csv"
 
-    casos, fallecidos = (
+    datasets = (
         pd.read_csv(
             URL.format(i),
             index_col=0)
         for i in DATASETS
     )
 
-    return casos, fallecidos
+    return datasets
 
 
 def import_datasets_to_carto(dfs_obj):
@@ -52,8 +52,10 @@ def import_datasets_to_carto(dfs_obj):
 
     errors = []
     try:
-        [to_carto(v, k, if_exists='replace')
-        for k, v in dfs_obj.items()]
+        for k, v in dfs_obj.items():
+            to_carto(v, k, if_exists='replace')
+            time.sleep(60)
+
     except Exception as e:
         logger.info(e)
         errors.append(e)
@@ -76,27 +78,24 @@ def get_unnested_datasets():
 
     logger.info('Getting unnested datasets...')
 
-    unnested_casos = read_carto(
-        read_sql_file('unnest_casos')
+    unnested_datasets = (
+        read_carto(read_sql_file(f'unnest_{i}').format(dataset=i))
+        for i in DATASETS
     )
 
-    unnested_fallecidos = read_carto(
-        read_sql_file('unnest_fallecidos')
-    )
-
-    return unnested_casos, unnested_fallecidos
+    return unnested_datasets
 
 
 def get_centroids_datasets():
 
     logger.info('Getting centroids datasets...')
 
-    centroids_casos, centroids_fallecidos = (
+    centroids_datasets = (
         read_carto(read_sql_file('centroids').format(dataset=i))
         for i in DATASETS
     )
 
-    return centroids_casos, centroids_fallecidos
+    return centroids_datasets
 
 
 def update_geoms():

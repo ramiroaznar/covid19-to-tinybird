@@ -10,19 +10,23 @@ import time
 def main():
 
     # raw data
-    casos, fallecidos = u.get_datasets()
+    casos, fallecidos, uci, altas = u.get_datasets()
     raw_data = {
         "casos": casos,
-        "fallecidos": fallecidos
+        "fallecidos": fallecidos,
+        "uci": uci,
+        "altas": altas
     }
     u.import_datasets_to_carto(raw_data)
     time.sleep(60)
 
     # unnested data
-    unnested_casos, unnested_fallecidos = u.get_unnested_datasets()
+    unnested_casos, unnested_fallecidos, unnested_uci, unnested_altas = u.get_unnested_datasets()
     unnested_data = {
         "unnested_casos": unnested_casos,
-        "unnested_fallecidos": unnested_fallecidos
+        "unnested_fallecidos": unnested_fallecidos,
+        "unnested_uci": unnested_uci,
+        "unnested_altas": unnested_altas,
     }
     time.sleep(60)
     u.import_datasets_to_carto(unnested_data)
@@ -30,10 +34,12 @@ def main():
     u.update_geoms()
 
     # centroids data
-    centroids_casos, centroids_fallecidos = u.get_centroids_datasets()
+    centroids_casos, centroids_fallecidos, centroids_uci, centroids_altas = u.get_centroids_datasets()
     centroids_data = {
         "centroids_casos": centroids_casos,
-        "centroids_fallecidos": centroids_fallecidos
+        "centroids_fallecidos": centroids_fallecidos,
+        "centroids_uci": centroids_uci,
+        "centroids_altas": centroids_altas,
     }
     time.sleep(60)
     u.import_datasets_to_carto(centroids_data)
