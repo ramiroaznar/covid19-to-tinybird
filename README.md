@@ -4,6 +4,29 @@
 * Autor: Ramiro Aznar
 * Fuente de datos: Datadista
 
+### Antes de empezar
+
+Por favor, antes de usar estos datos piensa en lo que significan estos datos y en el contexto en el que estan enmarcados. Los datos son mas que números o pixeles, son personas, ciudadanos, conocidos, trabajadores, amigos, compañeros de trabajo...
+
+### Datasets
+
+* Casos:
+    * [Raw](https://ramiroaznar.carto.com/dataset/casos)
+    * [Poligonos](https://ramiroaznar.carto.com/dataset/unnested_casos)
+    * [Centroides](https://ramiroaznar.carto.com/dataset/centroids_casos)
+* Fallecidos:
+    * [Raw](https://ramiroaznar.carto.com/dataset/fallecidos)
+    * [Poligonos](https://ramiroaznar.carto.com/dataset/unnested_fallecidos)
+    * [Centroides](https://ramiroaznar.carto.com/dataset/centroids_fallecidos)
+* Pacientes en UCI:
+    * [Raw](https://ramiroaznar.carto.com/dataset/uci)
+    * [Poligonos](https://ramiroaznar.carto.com/dataset/unnested_uci)
+    * [Centroides](https://ramiroaznar.carto.com/dataset/centroids_uci)
+* Altas:
+    * [Raw](https://ramiroaznar.carto.com/dataset/altas)
+    * [Poligonos](https://ramiroaznar.carto.com/dataset/unnested_altas)
+    * [Centroides](https://ramiroaznar.carto.com/dataset/centroids_altas)
+
 ### Esquemas
 
 Los datasets tienen el siguiente esquema:
@@ -59,14 +82,3 @@ $ pip install -r requirements.txt
 ```bash
 $ python run.py
 ```
-
-### Datasets
-
-* Casos:
-    * [Raw](https://ramiroaznar.carto.com/dataset/casos)
-    * [Poligonos](https://ramiroaznar.carto.com/dataset/unnested_casos)
-    * [Centroides](https://ramiroaznar.carto.com/dataset/centroids_casos)
-* Fallecidos:
-    * [Raw](https://ramiroaznar.carto.com/dataset/fallecidos)
-    * [Poligonos](https://ramiroaznar.carto.com/dataset/unnested_fallecidos)
-    * [Centroides](https://ramiroaznar.carto.com/dataset/centroids_fallecidos)
