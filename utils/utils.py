@@ -8,6 +8,7 @@ import time
 from carto.auth import APIKeyAuthClient
 from carto.sql import BatchSQLClient
 from carto.exceptions import CartoException
+import datetime as dt
 
 
 logging.basicConfig(
@@ -45,6 +46,35 @@ def get_datasets():
 
     return datasets
 
+def get_date_range():
+
+    start = dt.datetime.strptime("20/03/2020", "%d/%m/%Y")
+    end = dt.datetime.today()
+    date_range = [
+        (start + dt.timedelta(days=x)).strftime("%d/%m/%Y")
+        for x in range(0, (end - start).days + 1)
+        ]
+
+    return date_range
+
+
+def get_string_date_range(date_range):
+
+    string_date_range = ', '.join([
+        f"'{date}'" for date in date_range
+        ])
+
+    return string_date_range
+
+
+def get_underscore_date_range(date_range):
+
+    underscore_date_range = ','.join([
+        f"_{date.replace('/', '_')}" for date in date_range
+        ])
+
+    return underscore_date_range
+
 
 def import_datasets_to_carto(dfs_obj):
 
@@ -74,24 +104,32 @@ def read_sql_file(file_name):
     return sql_string
 
 
-def get_unnested_datasets():
+def get_unnested_datasets(string_date_range, underscore_date_range):
 
     logger.info('Getting unnested datasets...')
 
     unnested_datasets = (
-        read_carto(read_sql_file(f'unnest_{i}').format(dataset=i))
+        read_carto(read_sql_file(f'unnest_{i}').format(
+            string_date_range=string_date_range,
+            underscore_date_range=underscore_date_range,
+            dataset=i
+            ))
         for i in DATASETS
     )
 
     return unnested_datasets
 
 
-def get_centroids_datasets():
+def get_centroids_datasets(string_date_range, underscore_date_range):
 
     logger.info('Getting centroids datasets...')
 
     centroids_datasets = (
-        read_carto(read_sql_file('centroids').format(dataset=i))
+        read_carto(read_sql_file('centroids').format(
+            string_date_range=string_date_range,
+            underscore_date_range=underscore_date_range,
+            dataset=i
+            ))
         for i in DATASETS
     )
 
