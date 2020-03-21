@@ -5,7 +5,7 @@ with data as (
       unnest(
         array [
             '16/03/2020', '17/03/2020', '18/03/2020', '19/03/2020',
-            '20/03/2020', '21/03/2020'
+            {string_date_range}
           ]
       ),
       'DD/MM/YYYY'
@@ -13,7 +13,7 @@ with data as (
     unnest(
       array [
         d._16_03_2020, d._17_03_2020, d._18_03_2020, d._19_03_2020,
-        d._20_03_2020, d._21_03_2020
+        {underscore_date_range}
     ]
     ) AS value,
     d.ccaa,
