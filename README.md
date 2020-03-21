@@ -10,6 +10,9 @@ Por favor, antes de usar estos datos piensa en lo que significan estos datos y e
 
 ### Datasets
 
+* Poblacion y geometrias de las CCAA:
+  * [Poligonos](https://ramiroaznar.carto.com/dataset/spain_regions)
+
 * Casos:
     * [Raw](https://ramiroaznar.carto.com/dataset/casos)
     * [Poligonos](https://ramiroaznar.carto.com/dataset/unnested_casos)
@@ -48,9 +51,10 @@ La diferencia fundamental entre estos datasets y los de Datadista es como se han
 Los datasets se actualizan diariamente corriendo el script `run.py`. 
 
 Si quieres correrlo en tu ordenador sigue los siguientes pasos:
-1. Clona este repositorio.
+1. Clona este repositorio
 2. Deberas [crearte una cuenta en CARTO](www.carto.com/signup).
-3. Crea un archivo en esta carpeta llamado `creds.json` con la siguiente estructura:
+3. Descarga e importa a tu cuenta el dataset [`spain_regions`](e importa el dataset `spain_regions` a tu cuenta.)
+4. Crea un archivo en esta carpeta llamado `creds.json` con la siguiente estructura:
 
 ```json
 {
@@ -59,25 +63,25 @@ Si quieres correrlo en tu ordenador sigue los siguientes pasos:
 }
 ```
 
-4. Crea un virtual environment:
+5. Crea un virtual environment:
 
 ```bash
 $ virtualenv -p python 3 env
 ```
 
-5. Activalo:
+6. Activalo:
 
 ```bash
 $ source env/bin/activate
 ```
 
-6. Instala las dependencias:
+7. Instala las dependencias:
 
 ```bash
 $ pip install -r requirements.txt
 ```
 
-7. Por ultimo, corre el script:
+8. Por ultimo, corre el script:
 
 ```bash
 $ python run.py
