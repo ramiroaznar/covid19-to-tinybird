@@ -1,6 +1,8 @@
 ## Datos cocinados para hacer mapas y series temporales
 ### covid-19
 
+**Los datos no están actualizados**
+
 * Autor: Ramiro Aznar
 * Fuente de datos: Datadista
 
