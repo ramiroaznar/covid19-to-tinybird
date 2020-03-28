@@ -1,5 +1,4 @@
-import pandas as pd
-import json
+
 import requests as r
 import warnings
 import logging
@@ -41,13 +40,12 @@ def import_and_replace(dataset):
         "url": url
     }
 
-    try:
-        r = s.post(
-                url=URL,
-                params=params
-            )
-        logger.info(f'{dataset} imported into tinybird!')
-        return f'Success! {r.status_code}'
-    except Exception as e:
-        logger.info(f'Someting went wrong!')
-        return f'Error!, {e}'
+    r = s.post(
+            url=URL,
+            params=params
+        )
+
+    if r.status_code != 200:
+        raise Exception(r.json()['error'])
+    
+    logger.info(f'{dataset} imported into tinybird!')
