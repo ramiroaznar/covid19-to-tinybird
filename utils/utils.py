@@ -1,13 +1,9 @@
-import pandas as pd
-import json
-from cartoframes.auth import set_default_credentials
-from cartoframes import to_carto, read_carto
+
+import requests as r
 import warnings
 import logging
 import time
-from carto.auth import APIKeyAuthClient
-from carto.sql import BatchSQLClient
-from carto.exceptions import CartoException
+import os
 import datetime as dt
 
 
@@ -18,145 +14,38 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 warnings.filterwarnings('ignore')
 
-
-set_default_credentials('creds.json')
-with open('creds.json', 'r') as f:
-    creds = json.load(f)
-    USERNAME = creds['username']
-    API_KEY = creds['api_key']
-    USR_BASE_URL = "https://{user}.carto.com/".format(user=USERNAME)
-
-auth_client = APIKeyAuthClient(api_key=API_KEY, base_url=USR_BASE_URL)
-SQL_CLIENT = BatchSQLClient(auth_client)
-DATASETS = ['casos', 'fallecidos', 'uci', 'altas']
+APPEND_TOKEN = os.environ['APPEND_TOKEN']
+READ_TOKEN = os.environ['READ_TOKEN']
+URL = 'https://api.tinybird.co/v0/datasources'
 
 
-def get_datasets():
+def get_session(mode):
 
-    logger.info('Getting datasets...')
+    session = r.Session()
+    token = APPEND_TOKEN if mode == 'append' else READ_TOKEN
+    session.headers = {'Authorization': 'Bearer ' + token}
 
-    URL = "https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_{}.csv"
-
-    datasets = (
-        pd.read_csv(
-            URL.format(i),
-            index_col=0)
-        for i in DATASETS
-    )
-
-    return datasets
-
-def get_date_range():
-
-    start = dt.datetime.strptime("20/03/2020", "%d/%m/%Y")
-    end = dt.datetime.today()
-    date_range = [
-        (start + dt.timedelta(days=x)).strftime("%d/%m/%Y")
-        for x in range(0, (end - start).days + 1)
-        ]
-
-    return date_range
+    return session
 
 
-def get_string_date_range(date_range):
+def import_and_replace(dataset):
 
-    string_date_range = ', '.join([
-        f"'{date}'" for date in date_range
-        ])
+    logger.info(f'Importing {dataset} into tinybird...')
 
-    return string_date_range
+    s = get_session(mode='append')
+    url = f'https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_{dataset}_long.csv'
+    params = {
+        "name": f"ccaa_covid19_{dataset}",
+        "mode": "replace",
+        "url": url
+    }
 
+    r = s.post(
+            url=URL,
+            params=params
+        )
 
-def get_underscore_date_range(date_range):
-
-    underscore_date_range = ','.join([
-        f"_{date.replace('/', '_')}" for date in date_range
-        ])
-
-    return underscore_date_range
-
-
-def import_datasets_to_carto(dfs_obj):
-
-    logger.info('Importing datasets into carto...')
-
-    errors = []
-    try:
-        for k, v in dfs_obj.items():
-            to_carto(v, k, if_exists='replace')
-            time.sleep(60)
-
-    except Exception as e:
-        logger.info(e)
-        errors.append(e)
-        return errors
-
-
-def read_sql_file(file_name):
-
-    logger.info('Reading SQL file...')
-
-    with open(f'sql/{file_name}.sql', 'r') as sql_file:
-        sql = sql_file.read()
-
-    sql_string = sql.replace("\r", "").replace("\n", "")
-
-    return sql_string
-
-
-def get_unnested_datasets(string_date_range, underscore_date_range):
-
-    logger.info('Getting unnested datasets...')
-
-    unnested_datasets = (
-        read_carto(read_sql_file(f'unnest_{i}').format(
-            string_date_range=string_date_range,
-            underscore_date_range=underscore_date_range,
-            dataset=i
-            ))
-        for i in DATASETS
-    )
-
-    return unnested_datasets
-
-
-def get_centroids_datasets(string_date_range, underscore_date_range):
-
-    logger.info('Getting centroids datasets...')
-
-    centroids_datasets = (
-        read_carto(read_sql_file('centroids').format(
-            string_date_range=string_date_range,
-            underscore_date_range=underscore_date_range,
-            dataset=i
-            ))
-        for i in DATASETS
-    )
-
-    return centroids_datasets
-
-
-def update_geoms():
-
-    update_queries = []
-
-    try:
-        [update_queries.append(
-            read_sql_file('update_geoms').format(dataset=i)
-            )
-            for i in DATASETS]
-    except CartoException as e:
-        logger.info("some error ocurred", e)
-
-    job = SQL_CLIENT.create(update_queries)
-
-    job_id = job['job_id']
-    status = 'pending'
-    while status != 'done':
-        job = SQL_CLIENT.read(job_id)
-        status = job['status']
-        queries = job['query']
-        logger.info(", ".join(map(lambda q: q['status'],queries)))
-        time.sleep(60)
-
-    return status
+    if r.status_code != 200:
+        raise Exception(r.json()['error'])
+    
+    logger.info(f'{dataset} imported into tinybird!')
